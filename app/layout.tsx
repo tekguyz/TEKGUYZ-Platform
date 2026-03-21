@@ -1,0 +1,31 @@
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { ThemeProvider } from '@/components/theme-provider';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { AiStrategyBot } from '@/components/sections/AiStrategyBot';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+
+export const metadata: Metadata = {
+  title: 'TEKGUYZ | Architecting Premium AI & Digital Infrastructure',
+  description: 'We engineer high-performance AI workflows and digital systems for teams that refuse to lose.',
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning className="scroll-smooth relative">
+      <body className={`${inter.variable} font-sans antialiased bg-background text-foreground transition-colors duration-300 flex flex-col min-h-screen relative`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Header />
+          <main className="flex-grow relative">
+            {children}
+          </main>
+          <Footer />
+          <AiStrategyBot />
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
