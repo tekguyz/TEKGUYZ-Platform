@@ -9,7 +9,7 @@ import { AiStrategyBot } from '@/components/sections/AiStrategyBot';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'TEKGUYZ | Architecting Premium AI & Digital Infrastructure',
+  title: 'TEKGUYZ | Architecting the Advantage',
   description: 'We engineer high-performance AI workflows and digital systems for teams that refuse to lose.',
 };
 
