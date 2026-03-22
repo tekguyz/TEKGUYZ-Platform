@@ -77,11 +77,8 @@ export default function Image() {
           </svg>
           
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', fontSize: '80px', fontWeight: 900, letterSpacing: '-0.05em', color: '#ffffff', textTransform: 'uppercase' }}>
-              <span>TEKGUYZ</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', fontSize: '32px', fontWeight: 500, letterSpacing: '0.05em', color: '#a1a1aa' }}>
-              <span>Architecting the Advantage.</span>
+            <div style={{ display: 'flex', alignItems: 'center', fontSize: '64px', fontWeight: 900, letterSpacing: '0.05em', color: '#ffffff', textTransform: 'uppercase' }}>
+              <span>TEKGUYZ <span style={{ color: '#574cfa', margin: '0 16px' }}>|</span> Architecting the Advantage</span>
             </div>
           </div>
         </div>

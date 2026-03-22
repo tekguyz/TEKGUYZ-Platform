@@ -51,7 +51,7 @@ export function LogoMark({ className = "w-8 h-8" }: { className?: string }) {
 
 export function Logotype({ className = "" }: { className?: string }) {
   return (
-    <div className={`flex items-center font-black uppercase tracking-tighter ${className}`}>
+    <div className={`flex items-center font-black uppercase tracking-[0.2em] ${className}`}>
       <span>TEKGUY</span>
       <span className="relative inline-flex">
         <span className="invisible">Z</span>
