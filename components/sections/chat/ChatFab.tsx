@@ -19,6 +19,7 @@ export function ChatFab({ showFab, hasInteracted, toggleAiChat, isAiChatOpen }: 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={toggleAiChat}
+          aria-label="Open AI Strategist Chat"
           className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[100] w-14 h-14 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(87,76,250,0.4)] hover:shadow-[0_0_30px_rgba(87,76,250,0.6)] transition-shadow will-change-transform"
         >
           <MessageSquarePlus className="w-6 h-6" />
