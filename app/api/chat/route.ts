@@ -4,6 +4,7 @@ import { servicesData, caseStudiesData, processData } from '@/data/site-content'
 
 const systemInstruction = `You are a Helpful Partner at TEKGUYZ. Your tone is direct, warm, and helpful. No jargon. 
 Reference SERVICES, CASE STUDIES, and PROCESS data to answer questions simply. 
+
 SERVICES: ${JSON.stringify(servicesData)}
 CASE STUDIES: ${JSON.stringify(caseStudiesData)}
 PROCESS: ${JSON.stringify(processData)}`;
@@ -12,7 +13,17 @@ export async function POST(req: Request) {
   try {
     const { history } = await req.json();
     
-    // API KEY is pulled from the SERVER environment variable
+    // Ensure history exists and is an array
+    if (!history || !Array.isArray(history)) {
+      return NextResponse.json({ error: 'Invalid history format' }, { status: 400 });
+    }
+
+    // Safety check for API Key presence
+    if (!process.env.GEMINI_API_KEY) {
+      console.error("Missing GEMINI_API_KEY environment variable");
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+    }
+
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     
     const response = await ai.models.generateContent({
@@ -24,28 +35,48 @@ export async function POST(req: Request) {
         responseSchema: {
           type: Type.OBJECT,
           properties: {
-            text: { type: Type.STRING },
+            text: { 
+              type: Type.STRING,
+              description: "The conversational response from the AI."
+            },
             suggestions: {
               type: Type.ARRAY,
+              description: "Optional quick reply chips for the user.",
               items: {
                 type: Type.OBJECT,
                 properties: {
-                  label: { type: Type.STRING },
-                  action: { type: Type.STRING }
+                  label: { type: Type.STRING, description: "The text on the chip." },
+                  action: { type: Type.STRING, description: "The action identifier." }
                 },
                 required: ["label", "action"]
               }
             },
-            autoAction: { type: Type.STRING, nullable: true }
+            autoAction: { 
+              type: Type.STRING, 
+              description: "Identifier for automatic UI transitions.",
+              nullable: true 
+            }
           },
           required: ["text"]
         }
       }
     });
 
-    return NextResponse.json(JSON.parse(response.text));
+    // --- TypeScript Fix ---
+    // We capture the text and verify it's a string to satisfy JSON.parse()
+    const responseText = response.text;
+
+    if (!responseText) {
+      throw new Error("Gemini returned an empty or undefined response.");
+    }
+
+    return NextResponse.json(JSON.parse(responseText));
+    
   } catch (error) {
     console.error('Secure Chat Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to generate AI response' }, 
+      { status: 500 }
+    );
   }
 }
