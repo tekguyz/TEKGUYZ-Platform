@@ -82,11 +82,7 @@ export function Contact() {
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow relative w-full" name="roadmap" data-netlify="true" netlify-honeypot="bot-field">
                   {/* Hidden Netlify Fields */}
                   <input type="hidden" name="form-name" value="roadmap" />
-                  <p className="hidden">
-                    <label>
-                      Don&apos;t fill this out if you&apos;re human: <input name="bot-field" />
-                    </label>
-                  </p>
+                  <input type="hidden" name="bot-field" />
 
                   <div className="flex-grow relative w-full min-h-[350px] md:min-h-[300px]">
                     <AnimatePresence mode="wait" custom={direction}>

@@ -52,6 +52,7 @@ export function useRoadmapForm() {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           'form-name': 'roadmap',
+          'bot-field': '',
           mission: data.mission,
           friction: data.friction.join(', '),
           timeline: data.timeline,
