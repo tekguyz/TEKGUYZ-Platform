@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { GoogleGenAI, Type } from '@google/genai';
 import { servicesData, caseStudiesData, processData } from '@/data/site-content';
 
+// REQUIRED: Ensures Netlify treats this as a dynamic route
+export const dynamic = 'force-dynamic';
+
 const systemInstruction = `You are a Helpful Partner at TEKGUYZ. Your tone is direct, warm, and helpful. No jargon. 
 Reference SERVICES, CASE STUDIES, and PROCESS data to answer questions simply. 
 
@@ -13,12 +16,10 @@ export async function POST(req: Request) {
   try {
     const { history } = await req.json();
     
-    // Ensure history exists and is an array
     if (!history || !Array.isArray(history)) {
       return NextResponse.json({ error: 'Invalid history format' }, { status: 400 });
     }
 
-    // Safety check for API Key presence
     if (!process.env.GEMINI_API_KEY) {
       console.error("Missing GEMINI_API_KEY environment variable");
       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
@@ -62,8 +63,6 @@ export async function POST(req: Request) {
       }
     });
 
-    // --- TypeScript Fix ---
-    // We capture the text and verify it's a string to satisfy JSON.parse()
     const responseText = response.text;
 
     if (!responseText) {
