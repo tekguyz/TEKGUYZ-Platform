@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: 'TEKGUYZ | Architecting the Advantage',
   description: 'We engineer high-performance AI workflows and digital systems for teams that refuse to lose.',
   manifest: '/manifest.json',
-  icons: { icon: '/favicon.ico', apple: '/apple-touch-icon.png' },
+  icons: { icon: '/icon.svg', apple: '/icon.svg' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
