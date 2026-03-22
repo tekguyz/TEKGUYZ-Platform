@@ -45,7 +45,17 @@ export function useAiChat() {
     }
   }, [isAiChatOpen, hasInteracted, isMounted]);
 
-  const handleAiAction = (action: string) => {
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 50);
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
+
+  const handleAiAction = async (action: string) => {
     if (['NAV_TO_CONTACT', 'OPEN_ROADMAP'].includes(action)) {
       toggleAiChat(); window.location.href = '#contact';
     } else if (action === 'NAV_TO_WORK') {
@@ -53,7 +63,49 @@ export function useAiChat() {
     } else if (action === 'NAV_TO_PROCESS') {
       toggleAiChat(); window.location.href = '#process';
     } else {
-      handleSend(undefined, action);
+      if (isLoading) return;
+      setIsLoading(true);
+
+      // Remove suggestions from the last message so they vanish
+      setMessages(prev => {
+        const newMessages = [...prev];
+        if (newMessages.length > 0) {
+          newMessages[newMessages.length - 1] = {
+            ...newMessages[newMessages.length - 1],
+            suggestions: []
+          };
+        }
+        return newMessages;
+      });
+
+      const historyToSend = [...messages, { role: 'user' as const, text: action }];
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ history: historyToSend.map(m => ({
+            role: m.role,
+            parts: [{ text: m.text }]
+          }))})
+        });
+
+        if (!response.ok) throw new Error("Failed to reach AI server");
+
+        const data = await response.json();
+        
+        setMessages(prev => [...prev, { 
+          role: 'model', 
+          text: data.text || "",
+          suggestions: data.suggestions,
+          autoAction: data.autoAction
+        }]);
+      } catch (error) {
+        console.error("Chat error:", error);
+        setMessages(prev => [...prev, { role: 'model', text: "I apologize, I'm having trouble connecting to mission control. Try again in a second?" }]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -63,7 +115,16 @@ export function useAiChat() {
     if (!userMessage || isLoading) return
 
     setInput("")
-    const newMessages = [...messages, { role: 'user' as const, text: userMessage }]
+    
+    // Remove suggestions from the last message so they vanish
+    const cleanedMessages = messages.map((msg, idx) => {
+      if (idx === messages.length - 1) {
+        return { ...msg, suggestions: [] };
+      }
+      return msg;
+    });
+
+    const newMessages = [...cleanedMessages, { role: 'user' as const, text: userMessage }]
     setMessages(newMessages)
     setIsLoading(true)
 

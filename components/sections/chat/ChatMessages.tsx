@@ -61,20 +61,17 @@ export function ChatMessages({ messages, isLoading, handleAiAction, messagesEndR
           <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-1 dark:bg-zinc-800 bg-zinc-200 text-foreground">
             <Bot className="w-3 h-3" />
           </div>
-          <div className="p-4 rounded-2xl dark:bg-zinc-900/80 bg-zinc-100/80 backdrop-blur-xl rounded-tl-sm ring-1 dark:ring-white/5 ring-black/5 flex items-center gap-1 relative overflow-hidden">
-            {/* Shimmer effect */}
-            <motion.div 
-              className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent"
-              animate={{ translateX: ['-100%', '200%'] }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-            />
-            <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1, delay: 0 }} className="w-1.5 h-1.5 bg-primary rounded-full" />
-            <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-1.5 h-1.5 bg-primary rounded-full" />
-            <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-1.5 h-1.5 bg-primary rounded-full" />
+          <div className="p-4 rounded-2xl dark:bg-zinc-900/80 bg-zinc-100/80 backdrop-blur-xl rounded-tl-sm ring-1 dark:ring-white/5 ring-black/5 flex items-center gap-2 relative overflow-hidden">
+            <span className="text-sm text-muted-foreground italic">AI is thinking</span>
+            <div className="flex items-center gap-1">
+              <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1, delay: 0 }} className="w-1.5 h-1.5 bg-primary rounded-full" />
+              <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-1.5 h-1.5 bg-primary rounded-full" />
+              <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-1.5 h-1.5 bg-primary rounded-full" />
+            </div>
           </div>
         </div>
       )}
-      <div ref={messagesEndRef} />
+      <div id="chat-anchor" ref={messagesEndRef} />
     </div>
   )
 }
