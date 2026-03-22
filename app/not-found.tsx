@@ -25,7 +25,7 @@ export default function NotFound() {
             animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
-            <Hexagon className="w-40 h-40 text-primary/30 drop-shadow-[0_0_30px_rgba(87,76,250,0.4)]" strokeWidth={1} />
+            <Hexagon className="w-40 h-40 text-primary/30 drop-shadow-[0_0_30px_var(--primary)]" strokeWidth={1} />
           </motion.div>
           <div className="absolute inset-0 flex items-center justify-center">
             {/* Glitch Effect on 404 */}
@@ -46,7 +46,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-5 w-full sm:w-auto">
           <Link 
             href="/"
-            className="group w-full sm:w-auto min-h-[44px] px-8 py-4 rounded-full bg-primary text-primary-foreground font-semibold text-base hover:bg-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(87,76,250,0.3)] hover:shadow-[0_0_40px_rgba(87,76,250,0.6)] hover:scale-105 active:scale-95"
+            className="group w-full sm:w-auto min-h-[44px] px-8 py-4 rounded-full bg-primary text-primary-foreground font-semibold text-base hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_var(--primary)] hover:shadow-[0_0_40px_var(--primary)] hover:scale-105 active:scale-95"
           >
             Return to Mission Control
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

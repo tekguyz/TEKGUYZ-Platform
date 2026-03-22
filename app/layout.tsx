@@ -4,7 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { AiStrategyBot } from '@/components/sections/AiStrategyBot';
+import { AiStrategyBot } from '@/components/sections/AiStrategyBotWrapper';
 
 const inter = Inter({ 
   subsets: ['latin'], 
@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   title: 'TEKGUYZ | Architecting the Advantage',
   description: 'We engineer high-performance AI workflows and digital systems for teams that refuse to lose.',
   manifest: '/manifest.json',
+  icons: { icon: '/favicon.ico', apple: '/apple-touch-icon.png' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -30,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.variable} font-sans antialiased bg-background text-foreground transition-colors duration-300 flex flex-col min-h-screen relative`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
-          <main className="flex-grow relative">
+          <main className="flex-grow relative pt-20">
             {children}
           </main>
           <Footer />

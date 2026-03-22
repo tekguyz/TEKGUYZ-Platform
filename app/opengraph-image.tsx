@@ -33,7 +33,7 @@ export default function Image() {
             transform: 'translate(-50%, -50%)',
             width: '800px',
             height: '800px',
-            background: 'radial-gradient(circle, rgba(87,76,250,0.3) 0%, rgba(9,9,11,0) 70%)',
+            background: 'radial-gradient(circle, rgba(103, 58, 183, 0.3) 0%, rgba(9,9,11,0) 70%)',
           }}
         />
         

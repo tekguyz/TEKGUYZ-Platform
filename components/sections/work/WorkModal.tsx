@@ -27,7 +27,7 @@ export function WorkModal({ project, onClose, onNext }: WorkModalProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md"
+      className="fixed inset-0 z-[var(--z-overlay)] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md"
       onClick={onClose}
     >
       <motion.div
@@ -36,7 +36,7 @@ export function WorkModal({ project, onClose, onNext }: WorkModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Sticky Header for Mobile Close Button */}
-        <div className="sticky top-0 right-0 z-50 flex justify-end p-4 md:p-8 pointer-events-none">
+        <div className="sticky top-0 right-0 z-[var(--z-overlay)] flex justify-end p-4 md:p-8 pointer-events-none">
           <button 
             onClick={onClose}
             className="pointer-events-auto min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full dark:bg-zinc-900/90 bg-zinc-100/90 backdrop-blur-md dark:text-zinc-400 text-zinc-600 hover:text-foreground dark:hover:bg-zinc-800 hover:bg-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors ring-1 dark:ring-white/10 ring-black/5 shadow-lg"
@@ -73,7 +73,7 @@ export function WorkModal({ project, onClose, onNext }: WorkModalProps) {
             {project.impactMetrics.map((metric, idx) => {
               const parsed = parseMetric(metric)
               return (
-                <div key={idx} className="flex flex-col justify-center p-8 rounded-3xl dark:bg-violet-950/20 bg-violet-50/50 border-l-4 border-primary relative overflow-hidden group">
+                <div key={idx} className="flex flex-col justify-center p-8 rounded-3xl dark:bg-accent/20 bg-accent/10 border-l-4 border-primary relative overflow-hidden group">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   {parsed.value ? (
                     <>
@@ -144,7 +144,7 @@ export function WorkModal({ project, onClose, onNext }: WorkModalProps) {
               Explore More Work
             </span>
           </div>
-          <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-[0_0_20px_rgba(87,76,250,0.3)] group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-[0_0_20px_var(--primary)] group-hover:scale-110 transition-transform">
             <ChevronRight className="w-6 h-6" />
           </div>
         </div>

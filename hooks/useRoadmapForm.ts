@@ -12,19 +12,26 @@ export function useRoadmapForm() {
     register,
     handleSubmit,
     trigger,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<RoadmapLead>({
     resolver: zodResolver(RoadmapLeadSchema),
     mode: "onChange",
+    defaultValues: {
+      friction: [],
+    }
   })
 
-  const totalSteps = 4
+  const totalSteps = 5
 
   const nextStep = async () => {
     let fieldsToValidate: (keyof RoadmapLead)[] = []
-    if (step === 1) fieldsToValidate = ["objective"]
-    if (step === 2) fieldsToValidate = ["timeline", "budget"]
-    if (step === 3) fieldsToValidate = ["company"]
+    if (step === 1) fieldsToValidate = ["mission"]
+    if (step === 2) fieldsToValidate = ["friction"]
+    if (step === 3) fieldsToValidate = ["timeline"]
+    if (step === 4) fieldsToValidate = ["budget"]
+    if (step === 5) fieldsToValidate = ["name", "email", "website"]
 
     const isStepValid = await trigger(fieldsToValidate)
     if (isStepValid) {
@@ -45,7 +52,13 @@ export function useRoadmapForm() {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           'form-name': 'roadmap',
-          ...data,
+          mission: data.mission,
+          friction: data.friction.join(', '),
+          timeline: data.timeline,
+          budget: data.budget,
+          name: data.name,
+          email: data.email,
+          website: data.website || '',
         }).toString(),
       })
 
@@ -71,5 +84,7 @@ export function useRoadmapForm() {
     nextStep,
     prevStep,
     onSubmit,
+    setValue,
+    watch,
   }
 }

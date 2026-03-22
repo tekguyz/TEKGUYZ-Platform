@@ -28,7 +28,7 @@ export function WorkFilters({ industries, activeFilter, setActiveFilter }: WorkF
           {activeFilter === industry && (
             <motion.div
               layoutId="activeFilterDot"
-              className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(87,76,250,0.8)]"
+              className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--primary)]"
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             />
           )}

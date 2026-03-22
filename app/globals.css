@@ -13,7 +13,15 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-brand-slice: var(--brand-slice);
   --font-sans: var(--font-sans);
+
+  --z-fab: 90;
+  --z-header: 100;
+  --z-overlay: 200;
+  --z-chat: 210;
 
   --animate-blink: blink 1s step-end infinite;
   @keyframes blink {
@@ -32,16 +40,26 @@
   --muted: #f4f4f5;
   --muted-foreground: #71717a;
   --border: #e4e4e7;
+  --accent: oklch(65% 0.2 280);
+  --accent-foreground: #ffffff;
+  --brand-slice: oklch(65% 0.25 210);
 }
 
 .dark {
   --background: #050505;
   --foreground: #fafafa;
-  --primary: oklch(70% 0.18 265);
+  --primary: oklch(65% 0.22 265);
   --primary-foreground: #ffffff;
   --secondary: #27272a;
   --secondary-foreground: #fafafa;
   --muted: #27272a;
   --muted-foreground: #a1a1aa;
   --border: #27272a;
+  --accent: oklch(70% 0.18 280);
+  --accent-foreground: #ffffff;
+  --brand-slice: oklch(65% 0.25 210);
+}
+
+@utility glow-primary {
+  box-shadow: 0 0 20px var(--primary);
 }

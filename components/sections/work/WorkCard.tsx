@@ -36,13 +36,13 @@ export function WorkCard({
       onMouseLeave={() => setOpacity(0)}
       onClick={onClick}
       whileHover={{ scale: 1.01 }}
-      className={`relative overflow-hidden group p-8 md:p-10 rounded-3xl dark:bg-zinc-950/40 bg-white/40 backdrop-blur-xl ring-1 dark:ring-white/10 ring-black/5 hover:ring-violet-500/50 dark:hover:ring-violet-500/50 transition-all duration-500 flex flex-col hover:shadow-[0_0_30px_-5px_rgba(87,76,250,0.3)] will-change-transform cursor-pointer ${className}`}
+      className={`relative overflow-hidden group p-8 md:p-10 rounded-3xl dark:bg-zinc-950/40 bg-white/40 backdrop-blur-xl ring-1 dark:ring-white/10 ring-black/5 hover:ring-primary/50 dark:hover:ring-primary/50 transition-all duration-500 flex flex-col hover:shadow-[0_0_30px_-5px_var(--primary)] will-change-transform cursor-pointer ${className}`}
     >
       <div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 hidden sm:block z-0"
         style={{
           opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(87,76,250,0.15), transparent 40%)`,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, color-mix(in srgb, var(--primary) 15%, transparent), transparent 40%)`,
         }}
       />
       

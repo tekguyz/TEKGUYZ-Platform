@@ -1,16 +1,20 @@
 "use client"
 
 import * as React from "react"
-import { motion, AnimatePresence, useScroll } from "motion/react"
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { Logo } from "@/components/ui/Logo"
+import { useUIStore } from "@/store/useUIStore"
 
 export function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
+  const { isMobileMenuOpen, setMobileMenuOpen } = useUIStore()
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null)
   const { scrollYProgress } = useScroll()
+
+  // GPU-accelerated scroll bar
+  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1])
 
   const navLinks = [
     { name: "Services", href: "/#solutions" },
@@ -18,131 +22,131 @@ export function Header() {
     { name: "Process", href: "/#process" },
   ]
 
-  // Prevent scrolling when mobile menu is open
+  // Body lock to prevent background scrolling
   React.useEffect(() => {
     if (isMobileMenuOpen) {
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = "hidden"
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
     } else {
       document.body.style.overflow = "unset"
-      document.body.style.paddingRight = "0px";
     }
   }, [isMobileMenuOpen])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-background/70 backdrop-blur-2xl border-b border-white/5 shadow-sm transition-colors duration-300">
-      <motion.div 
-        className="absolute top-0 left-0 right-0 h-[2px] bg-primary shadow-[0_0_10px_rgba(87,76,250,0.5)] z-50"
-        style={{ scaleX: scrollYProgress, transformOrigin: "0%" }}
-      />
-      <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group z-50">
-          <Logo />
-        </Link>
-
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-2 relative">
-          {navLinks.map((link, index) => (
-            <Link 
-              key={link.name} 
-              href={link.href} 
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full transition-colors z-10"
-            >
-              {link.name}
-              {hoveredIndex === index && (
-                <motion.div
-                  layoutId="nav-pill"
-                  className="absolute inset-0 bg-primary/10 rounded-full -z-10"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Actions */}
-        <div className="hidden md:flex items-center gap-4 z-50">
-          <ThemeToggle />
-          <Link 
-            href="/#contact" 
-            className="px-6 py-2.5 text-sm font-bold rounded-full bg-primary text-primary-foreground hover:bg-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all shadow-[0_0_20px_rgba(87,76,250,0.3)] hover:shadow-[0_0_30px_rgba(87,76,250,0.5)] hover:scale-105 active:scale-95 hover:animate-pulse"
-          >
-            Start Project
+    <>
+      <header className="fixed top-0 left-0 right-0 z-[var(--z-header)] bg-background/70 backdrop-blur-2xl border-b border-white/5 shadow-sm transition-colors duration-300">
+        {/* Scroll Progress Bar */}
+        <motion.div 
+          className="absolute top-0 left-0 right-0 h-[2px] bg-primary shadow-[0_0_10px_var(--primary)] z-[calc(var(--z-header)+10)]"
+          style={{ scaleX, transformOrigin: "0%", willChange: "transform" }}
+        />
+        
+        <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between relative">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group z-[calc(var(--z-header)+20)]">
+            <Logo />
           </Link>
-        </div>
 
-        {/* Mobile Toggle */}
-        <div className="md:hidden flex items-center gap-4 z-50">
-          <ThemeToggle />
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:bg-secondary rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          >
-            <motion.div
-              animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
-              transition={{ duration: 0.2 }}
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-2 relative">
+            {navLinks.map((link, index) => (
+              <Link 
+                key={link.name} 
+                href={link.href} 
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors z-10"
+              >
+                {link.name}
+                {hoveredIndex === index && (
+                  <motion.div
+                    layoutId="nav-pill"
+                    className="absolute inset-0 bg-primary/10 rounded-full -z-10"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center gap-4 z-[calc(var(--z-header)+20)]">
+            <ThemeToggle />
+            <Link 
+              href="/#contact" 
+              className="px-6 py-2.5 text-sm font-bold rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-[0_0_20px_var(--primary)]"
+            >
+              Start Project
+            </Link>
+          </div>
+
+          {/* Mobile UI */}
+          <div className="md:hidden flex items-center gap-4 z-[calc(var(--z-header)+20)]">
+            <ThemeToggle />
+            <button 
+              onClick={() => setMobileMenuOpen(!isMobileMenuOpen)} 
+              className="w-10 h-10 flex items-center justify-center text-foreground hover:bg-secondary rounded-full outline-none"
+              aria-label="Toggle Menu"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </motion.div>
-          </button>
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile Menu Overlay */}
+      {/* MOBILE MENU OVERLAY - MOVED OUTSIDE HEADER TO FIX BLUR-TRAP */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            animate={{ opacity: 1, backdropFilter: "blur(24px)" }}
-            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 md:hidden bg-background/90 flex flex-col justify-center items-center"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[var(--z-overlay)] md:hidden bg-background flex flex-col pt-32 px-8"
           >
-            <div className="flex flex-col items-center gap-8 w-full px-6">
+            <div className="flex flex-col gap-8">
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{ duration: 0.3, delay: i * 0.1 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1 }}
                 >
                   <Link 
                     href={link.href} 
-                    onClick={() => setIsMobileMenuOpen(false)} 
+                    onClick={() => setMobileMenuOpen(false)} 
                     className="text-3xl font-bold tracking-tight text-foreground hover:text-primary transition-colors"
                   >
                     {link.name}
                   </Link>
                 </motion.div>
               ))}
+              
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3, delay: navLinks.length * 0.1 }}
-                className="mt-8 w-full max-w-xs"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+                className="mt-4"
               >
                 <Link 
                   href="/#contact" 
-                  onClick={() => setIsMobileMenuOpen(false)} 
-                  className="block w-full py-4 text-center text-lg font-bold rounded-full bg-primary text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background shadow-[0_0_30px_rgba(87,76,250,0.4)] hover:scale-105 transition-transform"
+                  onClick={() => setMobileMenuOpen(false)} 
+                  className="inline-block w-full py-4 text-center text-lg font-bold rounded-full bg-primary text-primary-foreground shadow-[0_0_30px_var(--primary)]"
                 >
                   Start Project
                 </Link>
               </motion.div>
             </div>
+
+            {/* Subtle Brand Watermark in menu */}
+            <div className="mt-auto pb-12 opacity-20 italic text-sm">
+              Architecting the Advantage.
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   )
 }

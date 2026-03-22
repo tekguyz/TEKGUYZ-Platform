@@ -14,7 +14,7 @@ export default function TermsPage() {
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)]" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/20 blur-[120px] rounded-[100%] pointer-events-none" />
-      <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-violet-500/20 blur-[100px] rounded-[100%] pointer-events-none" />
+      <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-accent/20 blur-[100px] rounded-[100%] pointer-events-none" />
 
       <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
         
@@ -31,7 +31,7 @@ export default function TermsPage() {
 
         {/* Mini-Hero */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/50 drop-shadow-[0_0_15px_rgba(87,76,250,0.3)]">
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/50 drop-shadow-[0_0_15px_var(--primary)]">
             Terms of Service
           </h1>
           <p className="text-lg text-muted-foreground font-light">

@@ -57,13 +57,13 @@ function SpotlightCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       whileHover={{ scale: 1.01 }}
-      className={`relative overflow-hidden group p-8 md:p-10 rounded-3xl dark:bg-zinc-950/40 bg-white/40 backdrop-blur-xl ring-1 dark:ring-white/10 ring-black/5 hover:ring-violet-500/50 dark:hover:ring-violet-500/50 transition-all duration-500 flex flex-col hover:shadow-[0_0_30px_-5px_rgba(87,76,250,0.3)] will-change-transform ${className} ${isPrimary ? 'dark:bg-violet-950/10 bg-violet-50/30' : ''}`}
+      className={`relative overflow-hidden group p-8 md:p-10 rounded-3xl dark:bg-zinc-950/40 bg-white/40 backdrop-blur-xl ring-1 dark:ring-white/10 ring-black/5 hover:ring-primary/50 dark:hover:ring-primary/50 transition-all duration-500 flex flex-col hover:shadow-[0_0_30px_-5px_var(--primary)] will-change-transform ${className} ${isPrimary ? 'dark:bg-accent/10 bg-accent/30' : ''}`}
     >
       <div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 hidden sm:block z-0"
         style={{
           opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(87,76,250,0.15), transparent 40%)`,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, color-mix(in srgb, var(--primary) 15%, transparent), transparent 40%)`,
         }}
       />
       {children}
@@ -128,13 +128,13 @@ export function Solutions() {
                   {/* The Icon (Architectural) */}
                   <div className="mb-8 relative w-14 h-14 flex items-center justify-center rounded-2xl border dark:border-white/10 border-black/5 bg-background/50 backdrop-blur-md shadow-sm z-10 overflow-hidden">
                     <div className="absolute inset-0 bg-primary/10 blur-md" />
-                    <Icon className="w-7 h-7 text-primary relative z-10 drop-shadow-[0_0_8px_rgba(87,76,250,0.5)]" />
+                    <Icon className="w-7 h-7 text-primary relative z-10 drop-shadow-[0_0_8px_var(--primary)]" />
                   </div>
                   
                   <h3 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight relative z-10">{service.title}</h3>
                   
                   {/* The Pitch (Strategic Insight) */}
-                  <div className="mb-6 p-4 rounded-xl dark:bg-violet-950/20 bg-violet-50/50 border-l-2 border-primary relative z-10">
+                  <div className="mb-6 p-4 rounded-xl dark:bg-accent/20 bg-accent/10 border-l-2 border-primary relative z-10">
                     <span className="text-xs font-bold uppercase tracking-wider text-primary mb-1 block">Strategic Insight</span>
                     <p className="text-foreground font-medium leading-relaxed">{service.pitch}</p>
                   </div>
@@ -147,7 +147,7 @@ export function Solutions() {
                         <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Capabilities</h4>
                         <div className="flex flex-wrap gap-2">
                             {service.capabilities.map(cap => (
-                                <span key={cap} className="dark:bg-zinc-900/80 bg-zinc-100/80 dark:text-zinc-300 text-zinc-700 text-xs font-medium px-3 py-1.5 rounded-full ring-1 dark:ring-white/10 ring-black/10 shadow-[0_0_10px_rgba(255,255,255,0.02)] dark:shadow-[0_0_10px_rgba(255,255,255,0.05)] transition-shadow hover:shadow-[0_0_15px_rgba(87,76,250,0.2)]">
+                                <span key={cap} className="dark:bg-zinc-900/80 bg-zinc-100/80 dark:text-zinc-300 text-zinc-700 text-xs font-medium px-3 py-1.5 rounded-full ring-1 dark:ring-white/10 ring-black/10 shadow-[0_0_10px_rgba(255,255,255,0.02)] dark:shadow-[0_0_10px_rgba(255,255,255,0.05)] transition-shadow hover:shadow-[0_0_15px_var(--primary)]">
                                   {cap}
                                 </span>
                             ))}
@@ -159,7 +159,7 @@ export function Solutions() {
                         <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Engineering Stack</h4>
                         <div className="flex flex-wrap gap-2">
                             {service.techStack.map(tech => (
-                                <span key={tech} className="flex items-center gap-1.5 dark:bg-violet-950/30 bg-violet-50/50 dark:text-violet-300 text-violet-700 text-xs font-medium px-3 py-1.5 rounded-full ring-1 dark:ring-violet-500/30 ring-violet-500/30 shadow-[0_0_10px_rgba(87,76,250,0.1)]">
+                                <span key={tech} className="flex items-center gap-1.5 dark:bg-accent/30 bg-accent/10 text-primary text-xs font-medium px-3 py-1.5 rounded-full ring-1 dark:ring-primary/30 ring-primary/30 shadow-[0_0_10px_var(--primary)]">
                                   <Code className="w-3 h-3 opacity-70" />
                                   {tech}
                                 </span>

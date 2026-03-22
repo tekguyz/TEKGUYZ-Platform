@@ -6,6 +6,7 @@ import { useRoadmapForm } from "@/hooks/useRoadmapForm"
 import { StepDiscovery } from "./contact/StepDiscovery"
 import { StepScope } from "./contact/StepScope"
 import { StepLogistics } from "./contact/StepLogistics"
+import { StepInvestment } from "./contact/StepInvestment"
 import { StepContact } from "./contact/StepContact"
 import { FormSuccessState } from "./contact/FormSuccessState"
 
@@ -37,6 +38,8 @@ export function Contact() {
     nextStep,
     prevStep,
     onSubmit,
+    setValue,
+    watch,
   } = useRoadmapForm()
 
   return (
@@ -69,15 +72,23 @@ export function Contact() {
                 {/* Progress Bar */}
                 <div className="w-full h-1 dark:bg-zinc-800 bg-zinc-200 rounded-full mb-10 overflow-hidden shrink-0">
                   <motion.div 
-                    className="h-full bg-primary rounded-full"
+                    className="h-full bg-primary rounded-full glow-primary"
                     initial={{ width: 0 }}
                     animate={{ width: `${(step / totalSteps) * 100}%` }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
                   />
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow relative w-full">
-                  <div className="flex-grow relative w-full h-[250px]">
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow relative w-full" name="roadmap" data-netlify="true" netlify-honeypot="bot-field">
+                  {/* Hidden Netlify Fields */}
+                  <input type="hidden" name="form-name" value="roadmap" />
+                  <p className="hidden">
+                    <label>
+                      Don&apos;t fill this out if you&apos;re human: <input name="bot-field" />
+                    </label>
+                  </p>
+
+                  <div className="flex-grow relative w-full min-h-[350px] md:min-h-[300px]">
                     <AnimatePresence mode="wait" custom={direction}>
                       {step === 1 && (
                         <StepDiscovery 
@@ -85,6 +96,8 @@ export function Contact() {
                           variants={variants} 
                           register={register} 
                           errors={errors} 
+                          setValue={setValue}
+                          watch={watch}
                         />
                       )}
                       {step === 2 && (
@@ -92,6 +105,9 @@ export function Contact() {
                           direction={direction} 
                           variants={variants} 
                           register={register} 
+                          errors={errors}
+                          setValue={setValue}
+                          watch={watch}
                         />
                       )}
                       {step === 3 && (
@@ -100,9 +116,21 @@ export function Contact() {
                           variants={variants} 
                           register={register} 
                           errors={errors} 
+                          setValue={setValue}
+                          watch={watch}
                         />
                       )}
                       {step === 4 && (
+                        <StepInvestment 
+                          direction={direction} 
+                          variants={variants} 
+                          register={register} 
+                          errors={errors} 
+                          setValue={setValue}
+                          watch={watch}
+                        />
+                      )}
+                      {step === 5 && (
                         <StepContact 
                           direction={direction} 
                           variants={variants} 
@@ -114,24 +142,24 @@ export function Contact() {
                   </div>
 
                   {/* Navigation Footer */}
-                  <div className="flex items-center justify-between mt-auto pt-6 border-t dark:border-zinc-800 border-zinc-200 shrink-0">
+                  <div className="flex flex-col-reverse sm:flex-row items-center justify-between mt-8 pt-6 border-t dark:border-zinc-800 border-zinc-200 shrink-0 gap-4 sm:gap-0">
                     {step > 1 ? (
                       <button
                         type="button"
                         onClick={prevStep}
-                        className="flex min-h-[44px] min-w-[44px] items-center text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-2 transition-colors"
+                        className="flex w-full sm:w-auto min-h-[44px] items-center justify-center text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-2 transition-colors"
                       >
                         <ArrowLeft className="w-4 h-4 mr-2" /> Back
                       </button>
                     ) : (
-                      <div /> // Spacer
+                      <div className="hidden sm:block" /> // Spacer
                     )}
 
                     {step < totalSteps ? (
                       <button
                         type="button"
                         onClick={nextStep}
-                        className="flex min-h-[44px] min-w-[44px] items-center bg-primary text-primary-foreground px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors shadow-lg shadow-primary/20"
+                        className="flex w-full sm:w-auto min-h-[44px] items-center justify-center bg-primary text-primary-foreground px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors shadow-lg shadow-primary/20"
                       >
                         Next Step <ArrowRight className="w-4 h-4 ml-2" />
                       </button>
@@ -139,9 +167,9 @@ export function Contact() {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="flex min-h-[44px] min-w-[44px] items-center bg-primary text-primary-foreground px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors shadow-lg shadow-primary/20 disabled:opacity-50"
+                        className="flex w-full sm:w-auto min-h-[44px] items-center justify-center bg-primary text-primary-foreground px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors shadow-lg shadow-primary/20 disabled:opacity-50"
                       >
-                        {isSubmitting ? "Submitting..." : "Submit Roadmap Request"}
+                        {isSubmitting ? "Submitting..." : "Generate My Roadmap"}
                       </button>
                     )}
                   </div>
@@ -150,8 +178,6 @@ export function Contact() {
             )}
           </AnimatePresence>
         </div>
-
-        {/* Hidden Form for Netlify Bots removed to fix build error. Netlify forms should be placed in public/ folder for Next.js App Router. */}
       </div>
     </section>
   )

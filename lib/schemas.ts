@@ -27,12 +27,13 @@ export const ProcessPhaseSchema = z.object({
 });
 
 export const RoadmapLeadSchema = z.object({
+  mission: z.string().min(1, "Please select a mission."),
+  friction: z.array(z.string()).min(1, "Please select at least one friction point."),
+  timeline: z.string().min(1, "Please select a timeline."),
+  budget: z.string().min(1, "Please select a budget."),
   name: z.string().min(2, "Please provide a valid name (at least 2 characters)."),
   email: z.string().email("Please provide a valid, professional email address."),
-  company: z.string().min(2, "Please provide your company name."),
-  budget: z.string().optional(),
-  timeline: z.string().optional(),
-  objective: z.string().min(10, "Please provide a brief objective for the project (at least 10 characters)."),
+  website: z.string().optional(),
 });
 
 // Export inferred TypeScript types to act as the Single Source of Truth

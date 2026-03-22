@@ -6,12 +6,12 @@ export function LogoMark({ className = "w-8 h-8" }: { className?: string }) {
       viewBox="0 0 24 24" 
       fill="none" 
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className={`text-primary ${className}`}
     >
       {/* Hexagon Outline */}
       <polygon 
         points="12 2, 21 7, 21 17, 12 22, 3 17, 3 7" 
-        stroke="oklch(58% 0.24 265)" 
+        stroke="currentColor" 
         strokeWidth="2" 
         strokeLinejoin="round"
       />
@@ -19,7 +19,7 @@ export function LogoMark({ className = "w-8 h-8" }: { className?: string }) {
       {/* Left Eye: < */}
       <polyline 
         points="9 10, 6 12, 9 14" 
-        stroke="oklch(58% 0.24 265)" 
+        stroke="currentColor" 
         strokeWidth="1.5" 
         strokeLinecap="round" 
         strokeLinejoin="round"
@@ -28,7 +28,7 @@ export function LogoMark({ className = "w-8 h-8" }: { className?: string }) {
       {/* Right Eye: > */}
       <polyline 
         points="15 10, 18 12, 15 14" 
-        stroke="oklch(58% 0.24 265)" 
+        stroke="currentColor" 
         strokeWidth="1.5" 
         strokeLinecap="round" 
         strokeLinejoin="round"
@@ -40,7 +40,7 @@ export function LogoMark({ className = "w-8 h-8" }: { className?: string }) {
         y1="17" 
         x2="14" 
         y2="17" 
-        stroke="oklch(58% 0.24 265)" 
+        stroke="currentColor" 
         strokeWidth="2" 
         strokeLinecap="round"
         className="animate-blink"
@@ -56,7 +56,7 @@ export function Logotype({ className = "" }: { className?: string }) {
       <span className="relative inline-flex">
         <span className="invisible">Z</span>
         <span className="absolute inset-0" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 45%, 0 45%)' }}>Z</span>
-        <span className="absolute inset-0 translate-x-[2px] translate-y-[2px] text-primary" style={{ clipPath: 'polygon(0 45%, 100% 45%, 100% 100%, 0 100%)' }}>Z</span>
+        <span className="absolute inset-0 translate-x-[2px] translate-y-[2px] text-brand-slice" style={{ clipPath: 'polygon(0 45%, 100% 45%, 100% 100%, 0 100%)' }}>Z</span>
       </span>
     </div>
   );
@@ -65,7 +65,7 @@ export function Logotype({ className = "" }: { className?: string }) {
 export function Logo({ className = "" }: { className?: string }) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <LogoMark className="w-7 h-7 drop-shadow-[0_0_12px_rgba(87,76,250,0.6)]" />
+      <LogoMark className="w-7 h-7 drop-shadow-[0_0_12px_var(--primary)]" />
       <Logotype className="text-xl text-foreground" />
     </div>
   );

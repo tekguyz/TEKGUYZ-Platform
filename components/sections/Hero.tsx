@@ -22,7 +22,7 @@ export function Hero() {
   }
 
   return (
-    <section className="relative min-h-[95vh] flex flex-col items-center justify-center px-6 md:px-12 pt-24 pb-16 overflow-hidden">
+    <section className="relative min-h-[95vh] flex flex-col items-center justify-center px-6 md:px-12 pt-8 pb-16 overflow-hidden">
       
       {/* --- High-End Background Effects --- */}
       {/* 1. Animated Tech Grid */}
@@ -30,7 +30,7 @@ export function Hero() {
       {/* 2. Primary Aurora Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/20 blur-[120px] rounded-[100%] pointer-events-none" />
       {/* 3. Secondary Indigo Glow for Depth */}
-      <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-violet-500/20 blur-[100px] rounded-[100%] pointer-events-none" />
+      <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-accent/20 blur-[100px] rounded-[100%] pointer-events-none" />
 
       <motion.div 
         variants={containerVariants}
@@ -49,7 +49,7 @@ export function Hero() {
         {/* The Copywriting Punch-Up */}
         <motion.h1 variants={itemVariants} className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter mb-8 text-foreground leading-[1.05]">
           End manual work fatigue. <br className="hidden md:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-br from-primary via-violet-400 to-violet-600">
+          <span className="text-transparent bg-clip-text bg-gradient-to-br from-primary via-accent to-primary">
             Refuse to lose.
           </span>
         </motion.h1>

@@ -100,11 +100,11 @@ export function Process() {
                   <motion.div 
                     initial={{ scale: 0.8, opacity: 0 }}
                     whileInView={{ 
-                      backgroundColor: "rgba(87,76,250,1)", // blurple
+                      backgroundColor: "var(--primary)",
                       color: "#ffffff",
                       scale: 1, 
                       opacity: 1,
-                      boxShadow: "0 0 20px rgba(87,76,250,0.6)" 
+                      boxShadow: "0 0 20px var(--primary)" 
                     }}
                     viewport={{ margin: "-20%", once: true }}
                     transition={{ duration: 0.5 }}
@@ -146,7 +146,7 @@ export function Process() {
 function PhaseCard({ phase, index }: { phase: typeof processData[0], index: number }) {
   const num = (index + 1).toString().padStart(2, '0')
   return (
-    <div className="relative p-8 rounded-3xl dark:bg-zinc-950/40 bg-white/40 backdrop-blur-md ring-1 dark:ring-white/10 ring-black/5 hover:ring-violet-500/30 transition-all duration-300 flex flex-col hover:shadow-xl overflow-hidden group">
+    <div className="relative p-8 rounded-3xl dark:bg-zinc-950/40 bg-white/40 backdrop-blur-md ring-1 dark:ring-white/10 ring-black/5 hover:ring-primary/30 transition-all duration-300 flex flex-col hover:shadow-xl overflow-hidden group">
       
       {/* Editorial Background Numeral */}
       <div className="absolute -right-4 -top-8 text-[150px] leading-none font-black opacity-[0.03] dark:opacity-[0.05] dark:text-white text-black pointer-events-none select-none z-0 group-hover:scale-110 group-hover:opacity-[0.05] dark:group-hover:opacity-[0.08] transition-all duration-700">
@@ -157,7 +157,7 @@ function PhaseCard({ phase, index }: { phase: typeof processData[0], index: numb
         {/* Top Row: Title & Duration */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <h3 className="text-2xl font-bold tracking-tight text-foreground">{phase.phaseTitle}</h3>
-          <span className="dark:bg-violet-950/50 bg-violet-50 text-primary text-xs font-bold px-3 py-1.5 rounded-full ring-1 ring-primary/20 w-fit whitespace-nowrap">
+          <span className="dark:bg-accent/50 bg-accent/20 text-primary text-xs font-bold px-3 py-1.5 rounded-full ring-1 ring-primary/20 w-fit whitespace-nowrap">
             {phase.duration}
           </span>
         </div>
@@ -183,7 +183,7 @@ function PhaseCard({ phase, index }: { phase: typeof processData[0], index: numb
         </div>
 
         {/* Footer: Outcome */}
-        <div className="mt-auto dark:bg-violet-500/10 bg-violet-50/50 border-l-2 border-primary p-4 rounded-r-lg">
+        <div className="mt-auto dark:bg-primary/10 bg-primary/5 border-l-2 border-primary p-4 rounded-r-lg">
           <p className="text-sm font-medium text-foreground dark:text-zinc-200 italic">
             <span className="font-semibold text-primary not-italic mr-2">Outcome:</span>
             {phase.outcome}

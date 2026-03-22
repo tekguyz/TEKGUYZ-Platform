@@ -16,7 +16,7 @@ export function ChatWindow({ isAiChatOpen, toggleAiChat, children }: ChatWindowP
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed inset-0 z-[120] w-full h-full rounded-none md:inset-auto md:bottom-6 md:right-6 md:z-[70] md:w-[480px] md:h-[750px] md:max-h-[85vh] md:rounded-3xl flex flex-col dark:bg-zinc-950/90 bg-white/90 backdrop-blur-3xl ring-1 dark:ring-white/10 ring-black/5 shadow-2xl overflow-hidden will-change-transform"
+          className="fixed inset-0 z-[var(--z-chat)] w-full h-full rounded-none md:inset-auto md:bottom-6 md:right-6 md:z-[var(--z-chat)] md:w-[480px] md:h-[750px] md:max-h-[85vh] md:rounded-3xl flex flex-col dark:bg-zinc-950/90 bg-white/90 backdrop-blur-3xl ring-1 dark:ring-white/10 ring-black/5 shadow-2xl overflow-hidden will-change-transform"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b dark:border-white/10 border-black/5 bg-primary/5">

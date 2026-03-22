@@ -1,17 +1,28 @@
 "use client"
 
-import { useRef } from "react"
-import { useInView } from "motion/react"
+import { useState } from "react"
+import { useScroll, useMotionValueEvent } from "motion/react"
 import { useAiChat } from "@/hooks/useAiChat"
+import { useUIStore } from "@/store/useUIStore"
 import { ChatFab } from "./chat/ChatFab"
 import { ChatWindow } from "./chat/ChatWindow"
 import { ChatMessages } from "./chat/ChatMessages"
 import { ChatInput } from "./chat/ChatInput"
 
 export function AiStrategyBot() {
-  const sentinelRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(sentinelRef)
-  const showFab = !isInView // Show FAB when sentinel scrolls out of view
+  const [isVisible, setIsVisible] = useState(false)
+  const { isMobileMenuOpen } = useUIStore()
+  const { scrollY } = useScroll()
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (latest > 400) {
+      setIsVisible(true)
+    } else {
+      setIsVisible(false)
+    }
+  })
+
+  const showFab = isVisible && !isMobileMenuOpen
 
   const {
     isMounted,
@@ -32,9 +43,6 @@ export function AiStrategyBot() {
 
   return (
     <>
-      {/* The Sentinel: A hidden element at 100vh to trigger the FAB */}
-      <div id="chat-sentinel" className="absolute top-[100vh] h-px w-px pointer-events-none" ref={sentinelRef} />
-      
       <ChatFab 
         showFab={showFab} 
         hasInteracted={hasInteracted} 
