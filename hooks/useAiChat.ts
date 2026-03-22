@@ -1,18 +1,10 @@
+"use client"
+
 import { useState, useEffect, useRef } from "react"
 import { useUIStore } from "@/store/useUIStore"
-import { GoogleGenAI, Type } from "@google/genai"
-import { servicesData, caseStudiesData, processData } from "@/data/site-content"
 
 export type Suggestion = { label: string; action: string };
 export type Message = { role: 'user' | 'model', text: string, suggestions?: Suggestion[], autoAction?: string | null };
-
-const systemInstruction = `You are a Helpful Partner at TEKGUYZ. Your tone is direct, warm, and helpful. Use plain English and avoid jargon (no "leverage", "optimize", "synergy").
-Reference SERVICES, CASE STUDIES, and PROCESS data to answer questions simply.
-If the user is ready to start, wants a quote, or asks for a roadmap, you MUST include a specific action in your JSON response.
-
-SERVICES: ${JSON.stringify(servicesData)}
-CASE STUDIES: ${JSON.stringify(caseStudiesData)}
-PROCESS: ${JSON.stringify(processData)}`;
 
 const DEFAULT_MESSAGE: Message = { 
   role: 'model', 
@@ -25,42 +17,25 @@ const DEFAULT_MESSAGE: Message = {
 
 export function useAiChat() {
   const { isAiChatOpen, toggleAiChat } = useUIStore()
-  
   const [messages, setMessages] = useState<Message[]>([DEFAULT_MESSAGE]);
-  const [hasInteracted, setHasInteracted] = useState(true);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // --- PERSISTENCE & INTERACTION ---
   useEffect(() => {
     setIsMounted(true);
-    // Cache Buster: Force the browser to load the new greeting instead of the old cached one
-    sessionStorage.removeItem('ai_chat_messages');
-    
     const savedMessages = sessionStorage.getItem('ai_chat_messages');
     if (savedMessages) {
-      try {
-        setMessages(JSON.parse(savedMessages));
-      } catch (e) {
-        console.error("Failed to parse saved messages", e);
-      }
+      try { setMessages(JSON.parse(savedMessages)); } catch (e) { console.error(e); }
     }
-    
     const savedInteracted = sessionStorage.getItem('ai_chat_interacted');
-    if (savedInteracted === 'true') {
-      setHasInteracted(true);
-    } else {
-      setHasInteracted(false);
-    }
+    setHasInteracted(savedInteracted === 'true');
   }, []);
 
   useEffect(() => {
-    if (isMounted) {
-      sessionStorage.setItem('ai_chat_messages', JSON.stringify(messages));
-    }
+    if (isMounted) sessionStorage.setItem('ai_chat_messages', JSON.stringify(messages));
   }, [messages, isMounted]);
 
   useEffect(() => {
@@ -70,45 +45,18 @@ export function useAiChat() {
     }
   }, [isAiChatOpen, hasInteracted, isMounted]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages, isLoading])
-
-  // --- ACTION LOGIC ---
   const handleAiAction = (action: string) => {
-    if (action === 'NAV_TO_CONTACT' || action === 'OPEN_ROADMAP') {
-      toggleAiChat();
-      window.location.href = '#contact';
+    if (['NAV_TO_CONTACT', 'OPEN_ROADMAP'].includes(action)) {
+      toggleAiChat(); window.location.href = '#contact';
     } else if (action === 'NAV_TO_WORK') {
-      toggleAiChat();
-      window.location.href = '#work';
+      toggleAiChat(); window.location.href = '#work';
     } else if (action === 'NAV_TO_PROCESS') {
-      toggleAiChat();
-      window.location.href = '#process';
+      toggleAiChat(); window.location.href = '#process';
     } else {
-      // Treat as a normal message reply
       handleSend(undefined, action);
     }
   };
 
-  // --- AUTO-REDIRECT ---
-  useEffect(() => {
-    const lastMessage = messages[messages.length - 1];
-    if (lastMessage?.role === 'model' && lastMessage.autoAction) {
-      const action = lastMessage.autoAction;
-      const timer = setTimeout(() => {
-        handleAiAction(action);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages]);
-
-  // --- SEND MESSAGE ---
   const handleSend = async (e?: React.FormEvent, textOverride?: string) => {
     if (e) e.preventDefault()
     const userMessage = textOverride || input.trim()
@@ -120,95 +68,37 @@ export function useAiChat() {
     setIsLoading(true)
 
     try {
-      // Gemini API requires the history to start with a user message.
-      let validHistory = newMessages;
-      if (validHistory.length > 0 && validHistory[0].role === 'model') {
-        validHistory = validHistory.slice(1);
-      }
-
-      const history = validHistory.map(m => ({
-        role: m.role,
-        parts: [{ text: m.text }]
-      }));
-
-      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
-      
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.1-flash-lite-preview',
-        contents: history,
-        config: {
-          systemInstruction: systemInstruction,
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              text: {
-                type: Type.STRING,
-                description: "The conversational response from the AI."
-              },
-              suggestions: {
-                type: Type.ARRAY,
-                description: "Optional quick reply chips for the user.",
-                items: {
-                  type: Type.OBJECT,
-                  properties: {
-                    label: { type: Type.STRING, description: "The text on the chip." },
-                    action: { type: Type.STRING, description: "The action identifier, e.g., NAV_TO_CONTACT, NAV_TO_WORK, or just a reply text." }
-                  },
-                  required: ["label", "action"]
-                }
-              },
-              autoAction: {
-                type: Type.STRING,
-                description: "If the user explicitly wants to start a project, get a quote, or see a roadmap, return 'OPEN_ROADMAP'. If they want to see work, return 'NAV_TO_WORK'. Otherwise, return null.",
-                nullable: true
-              }
-            },
-            required: ["text"]
-          }
-        }
+      // Logic shift: We are fetching our own internal API route
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ history: newMessages.map(m => ({
+          role: m.role,
+          parts: [{ text: m.text }]
+        }))})
       });
 
-      const responseText = response.text;
-      if (!responseText) {
-        throw new Error("Empty response from Gemini");
-      }
+      if (!response.ok) throw new Error("Failed to reach AI server");
 
-      const data = JSON.parse(responseText);
+      const data = await response.json();
       
       setMessages(prev => [...prev, { 
         role: 'model', 
         text: data.text || "",
         suggestions: data.suggestions,
         autoAction: data.autoAction
-      }])
+      }]);
     } catch (error) {
-      console.error("Chat error:", error)
-      setMessages(prev => [...prev, { role: 'model', text: "I apologize, but I'm currently experiencing a connection issue. Please try again or contact our team directly." }])
+      console.error("Chat error:", error);
+      setMessages(prev => [...prev, { role: 'model', text: "I apologize, I'm having trouble connecting to mission control. Try again in a second?" }]);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   }
 
-  return {
-    isMounted,
-    messages,
-    hasInteracted,
-    input,
-    setInput,
-    isLoading,
-    messagesEndRef,
-    handleSend,
-    handleKeyDown,
-    handleAiAction,
-    isAiChatOpen,
-    toggleAiChat
-  }
+  return { isMounted, messages, hasInteracted, input, setInput, isLoading, messagesEndRef, handleSend, handleKeyDown, handleAiAction, isAiChatOpen, toggleAiChat }
 }
