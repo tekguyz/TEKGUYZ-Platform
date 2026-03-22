@@ -151,15 +151,7 @@ export function Contact() {
           </AnimatePresence>
         </div>
 
-        {/* Hidden Form for Netlify Bots */}
-        <form name="roadmap" data-netlify="true" netlify-honeypot="bot-field" hidden>
-          <input type="text" name="name" />
-          <input type="email" name="email" />
-          <input type="text" name="company" />
-          <input type="text" name="objective" />
-          <input type="text" name="timeline" />
-          <input type="text" name="budget" />
-        </form>
+        {/* Hidden Form for Netlify Bots removed to fix build error. Netlify forms should be placed in public/ folder for Next.js App Router. */}
       </div>
     </section>
   )
