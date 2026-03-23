@@ -3,8 +3,7 @@
 import { useState } from "react"
 import { useForm, UseFormRegister, FieldErrors, UseFormSetValue, UseFormWatch } from "react-hook-form"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { RoadmapLeadSchema, type RoadmapLead } from "@/lib/schemas"
+import type { RoadmapLead } from "@/lib/schemas"
 
 export function useRoadmapForm() {
   const [step, setStep] = useState(1)
@@ -20,7 +19,11 @@ export function useRoadmapForm() {
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<RoadmapLead>({
-    resolver: zodResolver(RoadmapLeadSchema),
+    resolver: async (data, context, options) => {
+      const { zodResolver } = await import("@hookform/resolvers/zod")
+      const { RoadmapLeadSchema } = await import("@/lib/schemas")
+      return zodResolver(RoadmapLeadSchema)(data, context, options)
+    },
     mode: "onChange",
     defaultValues: {
       "form-name": "roadmap",

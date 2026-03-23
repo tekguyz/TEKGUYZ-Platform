@@ -85,14 +85,14 @@ export function Contact() {
                   <input type="hidden" name="bot-field" />
                   
                   {/* Static hidden fields for Netlify parser */}
-                  <div hidden>
-                    <input type="text" name="mission" />
-                    <input type="text" name="friction" />
-                    <input type="text" name="timeline" />
-                    <input type="text" name="investment" />
-                    <input type="text" name="name" />
-                    <input type="email" name="email" />
-                    <input type="text" name="website" />
+                  <div aria-hidden="true" style={{ display: 'none' }}>
+                    <input type="text" name="mission" tabIndex={-1} autoComplete="off" />
+                    <input type="text" name="friction" tabIndex={-1} autoComplete="off" />
+                    <input type="text" name="timeline" tabIndex={-1} autoComplete="off" />
+                    <input type="text" name="investment" tabIndex={-1} autoComplete="off" />
+                    <input type="text" name="name" tabIndex={-1} autoComplete="off" />
+                    <input type="email" name="email" tabIndex={-1} autoComplete="off" />
+                    <input type="text" name="website" tabIndex={-1} autoComplete="off" />
                   </div>
 
                   <div className="flex-grow relative w-full min-h-[350px] md:min-h-[300px]">
