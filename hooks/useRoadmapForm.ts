@@ -1,7 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, UseFormRegister, FieldErrors, UseFormSetValue, UseFormWatch } from "react-hook-form"
+
+// THE MASTER SCHEMA
+export interface RoadmapFormData {
+  "form-name": string;
+  "bot-field": string;
+  mission: string;
+  friction: string[];
+  timeline: string;
+  investment: string; // Renamed from budget
+  name: string;
+  email: string;
+  website: string;
+}
 
 export function useRoadmapForm() {
   const [step, setStep] = useState(1)
@@ -16,37 +29,24 @@ export function useRoadmapForm() {
     watch,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<RoadmapFormData>({
     mode: "onChange",
     defaultValues: {
       "form-name": "roadmap",
       "bot-field": "",
-      mission: "",      // Step 1
-      friction: [],     // Step 2
-      timeline: "",     // Step 3
-      investment: "",   // Step 4
-      name: "",         // Step 5
-      email: "",        // Step 5
-      website: "",      // Step 5
+      mission: "",
+      friction: [] as string[],
+      timeline: "",
+      investment: "",
+      name: "",
+      email: "",
+      website: "",
     },
   })
-
-  // Determine which fields to validate before letting the user move to the next step
-  const getFieldsForStep = (currentStep: number): string[] => {
-    switch (currentStep) {
-      case 1: return ["mission"]
-      case 2: return ["friction"]
-      case 3: return ["timeline"]
-      case 4: return ["investment"]
-      case 5: return ["name", "email", "website"]
-      default: return []
-    }
-  }
 
   const nextStep = async () => {
     const fields = getFieldsForStep(step)
     const isValid = await trigger(fields as any)
-
     if (isValid && step < totalSteps) {
       setDirection(1)
       setStep((s) => s + 1)
@@ -60,24 +60,30 @@ export function useRoadmapForm() {
     }
   }
 
-  const onSubmit = async (data: any) => {
+  const getFieldsForStep = (currentStep: number): (keyof RoadmapFormData)[] => {
+    switch (currentStep) {
+      case 1: return ["mission"]
+      case 2: return ["friction"]
+      case 3: return ["timeline"]
+      case 4: return ["investment"]
+      case 5: return ["name", "email", "website"]
+      default: return []
+    }
+  }
+
+  const onSubmit = async (data: RoadmapFormData) => {
     try {
-      // Netlify requires application/x-www-form-urlencoded
       const formData = new URLSearchParams()
-      
-      // Manually append the identifier fields
       formData.append("form-name", "roadmap")
       formData.append("bot-field", data["bot-field"] || "")
 
-      // Loop through all data and append
       Object.keys(data).forEach((key) => {
         if (key !== "form-name" && key !== "bot-field") {
-          const value = data[key]
-          // If the value is an array (like Step 2 multi-select), join it
+          const value = data[key as keyof RoadmapFormData]
           if (Array.isArray(value)) {
             formData.append(key, value.join(", "))
           } else {
-            formData.append(key, value)
+            formData.append(key, value as string)
           }
         }
       })
@@ -88,14 +94,9 @@ export function useRoadmapForm() {
         body: formData.toString(),
       })
 
-      if (response.ok) {
-        setIsSuccess(true)
-      } else {
-        throw new Error("Netlify interception failed.")
-      }
+      if (response.ok) setIsSuccess(true)
     } catch (error) {
       console.error("Submission Error:", error)
-      alert("Transmission failed. Please check your connection and try again.")
     }
   }
 
