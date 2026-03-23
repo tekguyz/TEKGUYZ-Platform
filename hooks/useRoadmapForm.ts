@@ -1,75 +1,101 @@
+"use client"
+
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { RoadmapLeadSchema, type RoadmapLead } from "@/lib/schemas"
 
 export function useRoadmapForm() {
   const [step, setStep] = useState(1)
   const [isSuccess, setIsSuccess] = useState(false)
-  const [direction, setDirection] = useState(1) // 1 for forward, -1 for backward
+  const [direction, setDirection] = useState(0)
+  const totalSteps = 5
 
   const {
     register,
     handleSubmit,
     trigger,
-    setValue,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm<RoadmapLead>({
-    resolver: zodResolver(RoadmapLeadSchema),
+  } = useForm({
     mode: "onChange",
     defaultValues: {
-      friction: [],
-    }
+      "form-name": "roadmap",
+      "bot-field": "",
+      mission: "",      // Step 1
+      friction: [],     // Step 2
+      timeline: "",     // Step 3
+      investment: "",   // Step 4
+      name: "",         // Step 5
+      email: "",        // Step 5
+      website: "",      // Step 5
+    },
   })
 
-  const totalSteps = 5
+  // Determine which fields to validate before letting the user move to the next step
+  const getFieldsForStep = (currentStep: number): string[] => {
+    switch (currentStep) {
+      case 1: return ["mission"]
+      case 2: return ["friction"]
+      case 3: return ["timeline"]
+      case 4: return ["investment"]
+      case 5: return ["name", "email", "website"]
+      default: return []
+    }
+  }
 
   const nextStep = async () => {
-    let fieldsToValidate: (keyof RoadmapLead)[] = []
-    if (step === 1) fieldsToValidate = ["mission"]
-    if (step === 2) fieldsToValidate = ["friction"]
-    if (step === 3) fieldsToValidate = ["timeline"]
-    if (step === 4) fieldsToValidate = ["budget"]
-    if (step === 5) fieldsToValidate = ["name", "email", "website"]
+    const fields = getFieldsForStep(step)
+    const isValid = await trigger(fields as any)
 
-    const isStepValid = await trigger(fieldsToValidate)
-    if (isStepValid) {
+    if (isValid && step < totalSteps) {
       setDirection(1)
-      setStep((prev) => Math.min(prev + 1, totalSteps))
+      setStep((s) => s + 1)
     }
   }
 
   const prevStep = () => {
-    setDirection(-1)
-    setStep((prev) => Math.max(prev - 1, 1))
+    if (step > 1) {
+      setDirection(-1)
+      setStep((s) => s - 1)
+    }
   }
 
-  const onSubmit = async (data: RoadmapLead) => {
+  const onSubmit = async (data: any) => {
     try {
-      const res = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          'form-name': 'roadmap',
-          'bot-field': '',
-          mission: data.mission,
-          friction: data.friction.join(', '),
-          timeline: data.timeline,
-          budget: data.budget,
-          name: data.name,
-          email: data.email,
-          website: data.website || '',
-        }).toString(),
+      // Netlify requires application/x-www-form-urlencoded
+      const formData = new URLSearchParams()
+      
+      // Manually append the identifier fields
+      formData.append("form-name", "roadmap")
+      formData.append("bot-field", data["bot-field"] || "")
+
+      // Loop through all data and append
+      Object.keys(data).forEach((key) => {
+        if (key !== "form-name" && key !== "bot-field") {
+          const value = data[key]
+          // If the value is an array (like Step 2 multi-select), join it
+          if (Array.isArray(value)) {
+            formData.append(key, value.join(", "))
+          } else {
+            formData.append(key, value)
+          }
+        }
       })
 
-      if (!res.ok) {
-        throw new Error('Form submission failed')
-      }
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formData.toString(),
+      })
 
-      setIsSuccess(true)
+      if (response.ok) {
+        setIsSuccess(true)
+      } else {
+        throw new Error("Netlify interception failed.")
+      }
     } catch (error) {
-      console.error('Submission error:', error)
+      console.error("Submission Error:", error)
+      alert("Transmission failed. Please check your connection and try again.")
     }
   }
 
