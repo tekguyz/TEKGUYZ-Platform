@@ -74,15 +74,17 @@ export function useRoadmapForm() {
       Object.keys(data).forEach((key) => {
         if (key !== "form-name" && key !== "bot-field") {
           const value = data[key as keyof RoadmapLead]
-          if (Array.isArray(value)) {
-            formData.append(key, value.join(", "))
-          } else {
-            formData.append(key, value as string)
+          if (value !== undefined && value !== null) {
+            if (Array.isArray(value)) {
+              value.forEach((v) => formData.append(key, v))
+            } else {
+              formData.append(key, value as string)
+            }
           }
         }
       })
 
-      const response = await fetch("/", {
+      const response = await fetch("/netlify-forms.html", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: formData.toString(),
