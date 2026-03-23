@@ -10,12 +10,40 @@ export default function Home() {
     "@type": "ProfessionalService",
     name: "TEKGUYZ",
     url: "https://tekguyz.com",
-    logo: "https://tekguyz.com/icon-512.png",
-    description: "Architecting high-performance AI workflows and digital systems.",
+    logo: "https://tekguyz.com/icon.svg",
+    image: "https://tekguyz.com/opengraph-image",
+    description: "Architecting high-performance AI workflows and digital systems for teams that refuse to lose.",
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Boca Raton",
+      addressLocality: "Pompano Beach",
       addressRegion: "FL"
+    },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Services",
+      itemListElement: [
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: "AI Workflow Automation"
+          }
+        },
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: "Digital Infrastructure Architecture"
+          }
+        },
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: "Strategic Consulting"
+          }
+        }
+      ]
     },
     sameAs: [
       "https://linkedin.com/company/tekguyz",
