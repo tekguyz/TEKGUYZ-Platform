@@ -27,10 +27,12 @@ export const ProcessPhaseSchema = z.object({
 });
 
 export const RoadmapLeadSchema = z.object({
+  "form-name": z.string().optional(),
+  "bot-field": z.string().optional(),
   mission: z.string().min(1, "Please select a mission."),
   friction: z.array(z.string()).min(1, "Please select at least one friction point."),
   timeline: z.string().min(1, "Please select a timeline."),
-  budget: z.string().min(1, "Please select a budget."),
+  investment: z.string().min(1, "Please select an investment level."),
   name: z.string().min(2, "Please provide a valid name (at least 2 characters)."),
   email: z.string().email("Please provide a valid, professional email address."),
   website: z.string().optional(),

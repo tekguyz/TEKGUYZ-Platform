@@ -3,18 +3,8 @@
 import { useState } from "react"
 import { useForm, UseFormRegister, FieldErrors, UseFormSetValue, UseFormWatch } from "react-hook-form"
 
-// THE MASTER SCHEMA
-export interface RoadmapFormData {
-  "form-name": string;
-  "bot-field": string;
-  mission: string;
-  friction: string[];
-  timeline: string;
-  investment: string; // Renamed from budget
-  name: string;
-  email: string;
-  website: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod"
+import { RoadmapLeadSchema, type RoadmapLead } from "@/lib/schemas"
 
 export function useRoadmapForm() {
   const [step, setStep] = useState(1)
@@ -29,7 +19,8 @@ export function useRoadmapForm() {
     watch,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<RoadmapFormData>({
+  } = useForm<RoadmapLead>({
+    resolver: zodResolver(RoadmapLeadSchema),
     mode: "onChange",
     defaultValues: {
       "form-name": "roadmap",
@@ -60,7 +51,7 @@ export function useRoadmapForm() {
     }
   }
 
-  const getFieldsForStep = (currentStep: number): (keyof RoadmapFormData)[] => {
+  const getFieldsForStep = (currentStep: number): (keyof RoadmapLead)[] => {
     switch (currentStep) {
       case 1: return ["mission"]
       case 2: return ["friction"]
@@ -71,7 +62,7 @@ export function useRoadmapForm() {
     }
   }
 
-  const onSubmit = async (data: RoadmapFormData) => {
+  const onSubmit = async (data: RoadmapLead) => {
     try {
       const formData = new URLSearchParams()
       formData.append("form-name", "roadmap")
@@ -79,7 +70,7 @@ export function useRoadmapForm() {
 
       Object.keys(data).forEach((key) => {
         if (key !== "form-name" && key !== "bot-field") {
-          const value = data[key as keyof RoadmapFormData]
+          const value = data[key as keyof RoadmapLead]
           if (Array.isArray(value)) {
             formData.append(key, value.join(", "))
           } else {

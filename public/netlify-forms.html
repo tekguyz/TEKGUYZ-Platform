@@ -6,13 +6,14 @@
 </head>
 <body>
     <!-- Hidden Form for Netlify Bots -->
-    <form name="roadmap" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <form name="roadmap" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input type="text" name="mission" />
+        <input type="text" name="friction" />
+        <input type="text" name="timeline" />
+        <input type="text" name="investment" />
         <input type="text" name="name" />
         <input type="email" name="email" />
-        <input type="text" name="company" />
-        <input type="text" name="objective" />
-        <input type="text" name="timeline" />
-        <input type="text" name="budget" />
+        <input type="text" name="website" />
     </form>
 </body>
 </html>

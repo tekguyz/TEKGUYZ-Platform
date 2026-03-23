@@ -12,7 +12,7 @@ interface StepInvestmentProps {
 }
 
 export function StepInvestment({ direction, variants, register, errors, setValue, watch }: StepInvestmentProps) {
-  const selectedBudget = watch("budget")
+  const selectedBudget = watch("investment")
 
   const budgets = [
     { id: "$5k–$10k", label: "$5k–$10k" },
@@ -45,7 +45,7 @@ export function StepInvestment({ direction, variants, register, errors, setValue
               <button
                 key={budget.id}
                 type="button"
-                onClick={() => setValue("budget", budget.id, { shouldValidate: true })}
+                onClick={() => setValue("investment", budget.id, { shouldValidate: true })}
                 className={`p-6 rounded-2xl border text-left transition-all duration-300 ${
                   isSelected 
                     ? "border-primary glow-primary bg-primary/10" 
@@ -61,15 +61,15 @@ export function StepInvestment({ direction, variants, register, errors, setValue
         </div>
 
         {/* Hidden input for react-hook-form */}
-        <input type="hidden" {...register("budget")} />
+        <input type="hidden" {...register("investment")} />
 
-        {errors.budget && (
+        {errors.investment && (
           <motion.p 
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             className="text-rose-500 text-sm mt-4"
           >
-            {errors.budget.message}
+            {errors.investment.message}
           </motion.p>
         )}
       </div>
